@@ -518,7 +518,7 @@
       position: absolute; top: 50%; left: 55%;
       transform: translate(-50%, -50%);
       width: 700px; height: 700px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(200,210,255,.28) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(255,222,160,.30) 0%, transparent 70%);
       pointer-events: none; transition: background .35s ease;
     }
     [data-theme="dark"] .hero::before {
@@ -621,7 +621,7 @@
       position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       width: 420px; height: 420px; border-radius: 50%;
-      background: rgba(200,210,240,.18); transition: background .35s ease;
+      background: rgba(255,226,170,.28); transition: background .35s ease;
     }
     [data-theme="dark"] .hero-circle { background: rgba(80,100,200,.08); }
 
@@ -677,6 +677,44 @@
       50%       { transform: translateY(-7px); }
     }
 
+
+    /* ── Vagues décoratives (arrière-plan du héros) ── */
+    .hero {
+      /* Palette tirée de l'image du héros : crème, or, ambre, cuivre */
+      --w-top:  #fff8e8; --w-a1: #fbeccb; --w-a2: #f0c978;
+      --w-b1:   #fae3b0; --w-b2: #eebb5e;
+      --w-c1:   #f2cd85; --w-c2: #e3a03a;
+      --w-d1:   #e3a03a; --w-d2: #c2762a;
+      padding-bottom: 150px;
+    }
+    [data-theme="dark"] .hero {
+      --w-top:  #1d1810; --w-a1: #2b2113; --w-a2: #5a3f14;
+      --w-b1:   #2a2012; --w-b2: #6b4a16;
+      --w-c1:   #3a2a12; --w-c2: #8a5f1a;
+      --w-d1:   #8a5f1a; --w-d2: #b9771f;
+    }
+    .hero-waves {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      width: 100%; height: 72%; min-height: 420px;
+      z-index: 0; pointer-events: none; display: block;
+    }
+    .hero-waves .wv { will-change: transform; }
+    .hero-waves .wv-a { animation: waveDrift 9s ease-in-out infinite alternate; }
+    .hero-waves .wv-b { animation: waveDrift 11s ease-in-out -6s infinite alternate-reverse; }
+    .hero-waves .wv-c { animation: waveDrift 13s ease-in-out -3s infinite alternate; }
+    .hero-waves .wv-d { animation: waveDrift 15s ease-in-out -9s infinite alternate-reverse; }
+    @keyframes waveDrift {
+      from { transform: translateX(-45px); }
+      to   { transform: translateX(45px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-waves .wv { animation: none; }
+    }
+    .hero-inner { position: relative; z-index: 1; }
+    @media (max-width: 900px) {
+      .hero-waves { height: 300px; min-height: 0; }
+    }
+
     @media (max-width: 900px) {
       .hero-inner { grid-template-columns: 1fr; text-align: center; }
       .hero-content { order: 2; }
@@ -691,7 +729,7 @@
     }
 
     @media (max-width: 560px) {
-      .hero { padding: 90px 0 40px; }
+      .hero { padding: 90px 0 165px; }
       .hero-inner  { padding: 0 20px; gap: 24px; }
       .hero-visual { height: 340px; }
       .hero-title  { font-size: 2.2rem; }
@@ -1941,6 +1979,39 @@
        ② HERO — Espace éditorial
   ══════════════════════════════════════════ -->
   <section class="hero" id="hero">
+      <!-- Vagues d'arrière-plan : derrière textes, boutons, stats et (PC) l'image -->
+      <svg class="hero-waves" viewBox="0 0 1440 600" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="wgA" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color:var(--w-top)"/><stop offset="0.35" style="stop-color:var(--w-a1)"/><stop offset="1" style="stop-color:var(--w-a2)"/>
+          </linearGradient>
+          <linearGradient id="wgB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color:var(--w-b1)"/><stop offset="1" style="stop-color:var(--w-b2)"/>
+          </linearGradient>
+          <linearGradient id="wgC" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color:var(--w-c1)"/><stop offset="1" style="stop-color:var(--w-c2)"/>
+          </linearGradient>
+          <linearGradient id="wgD" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color:var(--w-d1)"/><stop offset="1" style="stop-color:var(--w-d2)"/>
+          </linearGradient>
+          <filter id="wBlur" x="-5%" y="-10%" width="110%" height="125%"><feGaussianBlur stdDeviation="7"/></filter>
+          <filter id="wBlurSm" x="-5%" y="-10%" width="110%" height="125%"><feGaussianBlur stdDeviation="3"/></filter>
+        </defs>
+        <!-- grande colline arrière (passe derrière l'image à droite) -->
+        <path class="wv wv-a" filter="url(#wBlur)" fill="url(#wgA)"
+          d="M-100 330 C 150 300 330 330 560 290 C 760 255 900 270 1010 215 C 1110 165 1170 60 1290 50 C 1380 44 1450 90 1540 120 L1540 620 L-100 620 Z"><animate attributeName="d" dur="6s" begin="0s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.33;.66;1" keySplines=".37 0 .63 1;.37 0 .63 1;.37 0 .63 1" values="M-100 330 C 150 300 330 330 560 290 C 760 255 900 270 1010 215 C 1110 165 1170 60 1290 50 C 1380 44 1450 90 1540 120 L1540 620 L-100 620 Z;M-100 330 C 114 277 353 303 608 320 C 763 274 853 235 982 205 C 1142 203 1215 60 1282 12 C 1331 53 1432 125 1540 101 L1540 620 L-100 620 Z;M-100 330 C 198 286 333 367 513 295 C 732 217 932 275 1055 252 C 1102 150 1121 27 1272 73 C 1419 71 1489 60 1540 101 L1540 620 L-100 620 Z;M-100 330 C 150 300 330 330 560 290 C 760 255 900 270 1010 215 C 1110 165 1170 60 1290 50 C 1380 44 1450 90 1540 120 L1540 620 L-100 620 Z"/></path>
+        <!-- colline gauche, claire (derrière titre / boutons) -->
+        <path class="wv wv-b" filter="url(#wBlur)" fill="url(#wgB)" opacity=".85"
+          d="M-100 360 C 60 340 200 290 320 292 C 430 294 500 345 600 345 C 760 345 860 300 1010 330 C 1160 360 1300 330 1540 300 L1540 620 L-100 620 Z"><animate attributeName="d" dur="8s" begin="-5s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.33;.66;1" keySplines=".37 0 .63 1;.37 0 .63 1;.37 0 .63 1" values="M-100 360 C 60 340 200 290 320 292 C 430 294 500 345 600 345 C 760 345 860 300 1010 330 C 1160 360 1300 330 1540 300 L1540 620 L-100 620 Z;M-100 360 C 32 322 218 269 358 316 C 432 309 463 317 578 337 C 785 375 895 300 1004 300 C 1121 367 1286 358 1540 285 L1540 620 L-100 620 Z;M-100 360 C 98 329 202 319 283 296 C 408 264 525 349 635 374 C 754 334 821 274 996 348 C 1191 381 1331 306 1540 285 L1540 620 L-100 620 Z;M-100 360 C 60 340 200 290 320 292 C 430 294 500 345 600 345 C 760 345 860 300 1010 330 C 1160 360 1300 330 1540 300 L1540 620 L-100 620 Z"/></path>
+        <!-- colline intermédiaire -->
+        <path class="wv wv-c" filter="url(#wBlurSm)" fill="url(#wgC)" opacity=".9"
+          d="M-100 430 C 60 450 200 440 330 400 C 440 366 520 372 630 410 C 760 455 900 470 1060 440 C 1220 410 1340 360 1540 380 L1540 620 L-100 620 Z"><animate attributeName="d" dur="9s" begin="-9s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.33;.66;1" keySplines=".37 0 .63 1;.37 0 .63 1;.37 0 .63 1" values="M-100 430 C 60 450 200 440 330 400 C 440 366 520 372 630 410 C 760 455 900 470 1060 440 C 1220 410 1340 360 1540 380 L1540 620 L-100 620 Z;M-100 430 C 37 435 215 423 360 419 C 442 378 490 350 612 404 C 780 479 928 470 1055 416 C 1189 416 1328 382 1540 368 L1540 620 L-100 620 Z;M-100 430 C 90 441 202 463 300 403 C 422 342 540 375 658 433 C 755 446 869 449 1048 455 C 1245 427 1365 341 1540 368 L1540 620 L-100 620 Z;M-100 430 C 60 450 200 440 330 400 C 440 366 520 372 630 410 C 760 455 900 470 1060 440 C 1220 410 1340 360 1540 380 L1540 620 L-100 620 Z"/></path>
+        <!-- vague avant, bleu saturé (sous les statistiques) -->
+        <path class="wv wv-d" fill="url(#wgD)"
+          d="M-100 475 C 80 482 230 470 360 462 C 480 455 560 470 660 500 C 760 530 880 520 1010 505 C 1160 488 1300 450 1540 470 L1540 620 L-100 620 Z"><animate attributeName="d" dur="7s" begin="-3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.33;.66;1" keySplines=".37 0 .63 1;.37 0 .63 1;.37 0 .63 1" values="M-100 475 C 80 482 230 470 360 462 C 480 455 560 470 660 500 C 760 530 880 520 1010 505 C 1160 488 1300 450 1540 470 L1540 620 L-100 620 Z;M-100 475 C 67 473 239 460 378 473 C 481 462 543 457 650 496 C 772 544 897 520 1007 491 C 1142 491 1293 463 1540 463 L1540 620 L-100 620 Z;M-100 475 C 98 477 231 484 343 464 C 470 441 572 472 677 514 C 757 525 862 508 1003 513 C 1174 498 1314 439 1540 463 L1540 620 L-100 620 Z;M-100 475 C 80 482 230 470 360 462 C 480 455 560 470 660 500 C 760 530 880 520 1010 505 C 1160 488 1300 450 1540 470 L1540 620 L-100 620 Z"/></path>
+      </svg>
+      <script>if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches){var w=document.querySelector(".hero-waves");if(w&&w.pauseAnimations)w.pauseAnimations();}</script>
+
     <div class="hero-inner">
 
       <div class="hero-content">
